@@ -1,5 +1,5 @@
 // Base URL for the backend (to be updated after deploying to Render)
-const BASE_URL = "https://your-render-app-name.onrender.com"; // Placeholder
+const BASE_URL = "https://voting-sms-server.onrender.com"; // Placeholder
 
 // Array to store questions and answers
 let questions = [];
