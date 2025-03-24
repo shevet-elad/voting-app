@@ -1,220 +1,210 @@
-/* styles.css */
 body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f5f5f5;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
     margin: 0;
     padding: 0;
-    direction: rtl;
-    text-align: right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
-.container {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-}
-
-/* עיצוב הניווט העליון */
+/* Navbar Styles */
 .navbar {
     background-color: white;
-    padding: 10px 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    box-sizing: border-box; /* Ensure padding is included in width */
+    z-index: 1000;
+}
+
+/* Add margins to the inner content of the navbar */
+.navbar-content {
+    max-width: 1200px; /* Limit the width of the content */
+    width: 100%;
+    margin: 0 20px; /* Add margins on the sides */
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .navbar-brand {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #007bff;
-    order: 1; /* מבטיח שהלוגו יהיה בצד שמאל */
-}
-
-.nav-links {
     display: flex;
-    order: 2; /* מבטיח שהקישורים יהיו בצד ימין */
-}
-
-.nav-link {
+    align-items: center;
+    font-size: 1.5em;
+    font-weight: bold;
     color: #333;
-    margin-left: 20px;
-    text-decoration: none;
 }
 
-.nav-link:hover {
+.navbar-brand a {
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-brand i {
+    color: #007bff; /* Blue color for the icon */
+    margin-right: 10px;
+}
+
+.navbar-links {
+    display: flex;
+    gap: 20px;
+}
+
+.navbar-links a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1em;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-links a i {
+    margin-right: 5px;
+}
+
+.navbar-links a:hover {
     color: #007bff;
 }
 
-/* עיצוב הקופסאות */
-.card {
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+/* Adjust container to account for fixed navbar */
+.container {
+    max-width: 600px;
+    width: 100%;
+    padding: 20px;
+    margin-top: 70px; /* Add margin to avoid overlap with fixed navbar */
+}
+
+/* Login Page Styles */
+.card h2 {
+    margin: 0 0 15px;
+    font-size: 1.5em;
+    color: #333;
+}
+
+.card p {
+    margin: 0 0 20px;
+    color: #666;
+}
+
+.card input[type="tel"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+/* Results Page Styles */
+.result-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 20px;
     margin-bottom: 20px;
-    transition: transform 0.2s;
 }
 
-.card:hover {
-    transform: translateY(-2px);
+.result-card h5 {
+    margin: 0 0 15px;
+    font-size: 1.2em;
+    color: #333;
 }
 
-/* עיצוב כותרות */
-h3 {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.result-card canvas {
+    max-width: 100%;
+    height: 200px;
+}
+
+/* Voting Page Styles */
+.card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
     margin-bottom: 20px;
+    text-align: center;
 }
 
-/* עיצוב כפתורים */
-.btn {
-    padding: 10px 20px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.btn-primary {
-    background-color: #000;
-    color: white;
-}
-
-.btn-primary:hover {
-    background-color: #333;
-    transform: scale(1.05);
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    color: white;
-}
-
-.btn-danger:hover {
-    background-color: #c82333;
-    transform: scale(1.05);
+.card h5 {
+    margin: 0 0 20px;
+    font-size: 1.2em;
+    color: #333;
 }
 
 .btn-option {
-    background-color: white;
-    border: 1px solid #ccc;
-    margin: 0 10px;
-    display: inline-flex;
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    background-color: #e0e0e0; /* Original gray background */
+    color: #333; /* Original text color */
+    transition: background-color 0.3s;
+}
+
+.btn-option:hover {
+    background-color: #d0d0d0; /* Slightly darker gray on hover */
+}
+
+/* Green for "For" button when selected */
+.btn-option:nth-child(2).selected {
+    background-color: #28a745; /* Green */
+    color: white;
+}
+
+/* Red for "Against" button when selected */
+.btn-option:nth-child(3).selected {
+    background-color: #dc3545; /* Red */
+    color: white;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    display: block;
+    margin: 20px auto;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Thank You Message Styles */
+.card.text-center {
+    display: flex;
+    flex-direction: column;
     align-items: center;
 }
 
-.btn-option.selected {
-    background-color: #000;
-    color: white;
+.card.text-center i {
+    font-size: 3rem;
+    color: #28a745; /* Green color for the check icon */
+    margin-bottom: 20px;
 }
 
-.btn-option i {
-    margin-left: 5px;
+.card.text-center h3 {
+    margin: 0 0 10px;
+    font-size: 1.5em;
+    color: #333;
 }
 
-/* עיצוב שדות קלט */
-.form-control {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1rem;
-    transition: border-color 0.3s;
-}
-
-.form-control:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
-}
-
-/* עיצוב מתגים */
-.toggle-switch {
-    position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 24px;
-}
-
-.toggle-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.4s;
-    border-radius: 24px;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 20px;
-    width: 20px;
-    left: 2px;
-    bottom: 2px;
-    background-color: white;
-    transition: 0.4s;
-    border-radius: 50%;
-}
-
-input:checked + .slider {
-    background-color: #28a745;
-}
-
-input:checked + .slider:before {
-    transform: translateX(26px);
-}
-
-/* עיצוב גרף תוצאות */
-.histogram {
-    width: 100%;
-    height: 100px;
-    display: flex;
-    justify-content: space-around;
-    align-items: flex-end;
-    margin: 20px 0;
-}
-
-.bar {
-    width: 40%;
-    background-color: #007bff;
-    transition: height 0.5s ease;
-}
-
-.percentage {
-    font-size: 1.2rem;
-    font-weight: bold;
-}
-
-.percentage.for {
-    color: #28a745;
-}
-
-.percentage.against {
-    color: #dc3545;
-}
-
-/* עיצוב טוסטים (הודעות שגיאה) */
-.toast {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #dc3545;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    z-index: 1000;
+.card.text-center p {
+    margin: 0;
+    color: #666;
 }

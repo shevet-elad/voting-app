@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Voting</title>
+    <title>הזדהות - Digital Voting</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -26,10 +26,15 @@
     </nav>
 
     <!-- Main Content -->
-    <div class="container" id="votingContainer">
-        <!-- Questions will be added here dynamically -->
+    <div class="container">
+        <div class="card">
+            <h2>הזדהות</h2>
+            <p>אנא הזן את מספר הטלפון שלך כדי להמשיך להצבעה</p>
+            <input type="tel" id="phoneNumber" placeholder="+972123456789" required>
+            <button class="btn-primary" onclick="submitPhoneNumber()">אישור</button>
+        </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="login.js"></script>
 </body>
 </html>
