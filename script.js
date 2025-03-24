@@ -8,7 +8,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function fetchQuestions() {
     fetch('/api/questions')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok: ' + response.statusText);
+            }
+            return response.json();
+        })
         .then(data => {
             questions = data.filter(q => q.active).map(q => q.question);
             if (questions.length === 0) {
@@ -20,7 +25,7 @@ function fetchQuestions() {
         })
         .catch(error => {
             console.error('Error fetching questions:', error);
-            showToast('שגיאה בטעינת השאלות');
+            showToast('שגיאה בטעינת השאלות: ' + error.message);
         });
 }
 
