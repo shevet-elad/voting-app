@@ -3,34 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>הזדהות - Digital Voting</title>
+    <title>הזדהות</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="navbar-content">
             <div class="navbar-brand">
-                <a href="login.html">
-                    <i class="fas fa-check-square"></i>
-                    <span>Digital Voting</span>
+                <a href="/">
+                    <i class="fas fa-vote-yea"></i>
+                    Digital Voting
                 </a>
             </div>
-            <div class="navbar-links">
-                <a href="results.html">
-                    <i class="fas fa-chart-bar"></i> Results
-                </a>
-            </div>
+            <!-- Removed navbar-links -->
         </div>
     </nav>
 
-    <!-- Main Content -->
     <div class="container">
         <div class="card">
             <h2>הזדהות</h2>
-            <p>אנא הזן את מספר הטלפון שלך כדי להמשיך להצבעה</p>
-            <input type="tel" id="phoneNumber" placeholder="+972123456789" required>
+            <p>אנא הזן את מספר הטלפון שלך כדי להמשיך להצבעה.</p>
+            <input type="tel" id="phoneNumber" placeholder="הזן מספר טלפון">
             <button class="btn-primary" onclick="submitPhoneNumber()">אישור</button>
         </div>
     </div>

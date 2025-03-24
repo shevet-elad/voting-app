@@ -31,8 +31,8 @@ function renderQuestions() {
         card.className = 'card';
         card.innerHTML = `
             <h5>${q.question}</h5>
-            <button class="btn-option" onclick="selectAnswer(${index}, 'בעד')">✔ בעד</button>
             <button class="btn-option" onclick="selectAnswer(${index}, 'נגד')">✘ נגד</button>
+            <button class="btn-option" onclick="selectAnswer(${index}, 'בעד')">✔ בעד</button>
         `;
         container.appendChild(card);
     });
@@ -86,6 +86,10 @@ async function submitVote() {
                     <p>ההצבעה שלך נשמרה בהצלחה.</p>
                 </div>
             `;
+            // Redirect to results after 3 seconds
+            setTimeout(() => {
+                window.location.href = 'results.html';
+            }, 3000);
         } else {
             alert('שגיאה בשליחת ההצבעה. אנא נסה שוב.');
         }

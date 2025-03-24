@@ -14,16 +14,48 @@ function renderResults(results) {
     container.innerHTML = '';
 
     results.forEach((result, index) => {
+        // Fix the question text: move the question mark to the end if it exists at the start
+        let questionText = result.question;
+        if (questionText.startsWith('?')) {
+            questionText = questionText.substring(1).trim() + '?';
+        }
+
+        // Calculate total votes and percentages
+        const totalVotes = result.for + result.against;
+        const forPercentage = totalVotes > 0 ? ((result.for / totalVotes) * 100).toFixed(1) : 0;
+        const againstPercentage = totalVotes > 0 ? ((result.against / totalVotes) * 100).toFixed(1) : 0;
+
         const resultCard = document.createElement('div');
         resultCard.className = 'result-card';
 
         // Create a canvas element for the chart
         const canvas = document.createElement('canvas');
         canvas.id = `chart-${index}`;
+
+        // Create a div for the vote details
+        const voteDetails = document.createElement('div');
+        voteDetails.className = 'vote-details';
+        voteDetails.innerHTML = `
+            <p class="total-votes">סך כל ההצבעות: ${totalVotes}</p>
+            <div class="vote-breakdown-container">
+                <div class="vote-breakdown for-votes">
+                    <p class="vote-label">בעד</p>
+                    <p class="vote-percentage">${forPercentage}%</p>
+                    <p class="vote-count">(${result.for} מצביעים)</p>
+                </div>
+                <div class="vote-breakdown against-votes">
+                    <p class="vote-label">נגד</p>
+                    <p class="vote-percentage">${againstPercentage}%</p>
+                    <p class="vote-count">(${result.against} מצביעים)</p>
+                </div>
+            </div>
+        `;
+
         resultCard.innerHTML = `
-            <h5>${result.question}</h5>
+            <h5>${questionText}</h5>
         `;
         resultCard.appendChild(canvas);
+        resultCard.appendChild(voteDetails);
         container.appendChild(resultCard);
 
         // Create the bar chart
@@ -35,12 +67,12 @@ function renderResults(results) {
                     label: 'מספר קולות',
                     data: [result.for, result.against],
                     backgroundColor: [
-                        '#28a745', // Green for "For"
-                        '#dc3545'  // Red for "Against"
+                        '#4F46E5',
+                        '#4F46E5'
                     ],
                     borderColor: [
-                        '#1e7e34',
-                        '#b02a37'
+                        '#4338CA',
+                        '#4338CA'
                     ],
                     borderWidth: 1
                 }]
@@ -64,6 +96,13 @@ function renderResults(results) {
                 plugins: {
                     legend: {
                         display: false // Hide the legend since we only have one dataset
+                    }
+                },
+                // Revert bar width and spacing to previous state
+                datasets: {
+                    bar: {
+                        barPercentage: 0.5, // Revert to original bar width
+                        categoryPercentage: 0.2 // Revert to original spacing
                     }
                 }
             }

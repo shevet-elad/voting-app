@@ -3,31 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Voting</title>
+    <title>הצבעה דיגיטלית</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="navbar-content">
             <div class="navbar-brand">
-                <a href="login.html">
-                    <i class="fas fa-check-square"></i>
-                    <span>Digital Voting</span>
+                <a href="/">
+                    <i class="fas fa-vote-yea"></i>
+                    Digital Voting
                 </a>
             </div>
-            <div class="navbar-links">
-                <a href="results.html">
-                    <i class="fas fa-chart-bar"></i> Results
-                </a>
-            </div>
+            <!-- Removed navbar-links -->
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="container" id="votingContainer">
-        <!-- Questions will be added here dynamically -->
+    <div class="container">
+        <div id="votingContainer"></div>
     </div>
 
     <script src="script.js"></script>
