@@ -1,130 +1,155 @@
-/* General styles */
+/* styles.css */
 body {
-    font-family: Arial, sans-serif;
-    direction: rtl;
-    background: linear-gradient(to bottom, #e6f0fa, #b3d9ff);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f5f5f5;
     margin: 0;
-    flex-direction: column;
+    padding: 0;
+    direction: rtl;
+    text-align: right;
 }
 
-/* Modal styles */
-.modal {
+.container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.navbar {
+    background-color: white;
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    position: fixed;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.nav-link {
+    color: #333;
+    margin-left: 20px;
+    text-decoration: none;
+}
+
+.nav-link:hover {
+    color: #007bff;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background-color: #000;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #333;
+}
+
+.btn-option {
+    background-color: white;
+    border: 1px solid #ccc;
+    margin: 0 10px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-option.selected {
+    background-color: #000;
+    color: white;
+}
+
+.btn-option i {
+    margin-left: 5px;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 20px;
 }
 
-.modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 300px;
+.slider:before {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.modal-content h2 {
-    margin: 0 0 15px;
-}
-
-.modal-content input,
-.modal-content select {
-    padding: 10px;
-    margin-bottom: 15px;
-    width: 80%;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.modal-content button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.modal-content button:hover {
-    background-color: #45a049;
-}
-
-/* Voting container styles */
-#votingContainer {
-    text-align: center;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
     background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 300px;
-    margin-top: 20px;
-    display: none;
+    transition: 0.4s;
+    border-radius: 50%;
 }
 
-#votingContainer h2 {
-    margin: 0 0 15px;
+input:checked + .slider {
+    background-color: #007bff;
 }
 
-.answer-options label {
-    display: block;
-    margin: 10px 0;
+input:checked + .slider:before {
+    transform: translateX(20px);
 }
 
-.answer-options input[type="radio"] {
-    margin-left: 10px;
+.histogram {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    margin: 20px 0;
 }
 
-#votingContainer button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+.bar {
+    width: 40%;
+    background-color: #007bff;
+    transition: height 0.5s ease;
 }
 
-#votingContainer button:hover {
-    background-color: #45a049;
+.percentage {
+    font-size: 1.2rem;
+    font-weight: bold;
 }
 
-/* Animation for voting container */
-.fade-in {
-    animation: fadeIn 0.5s;
+.percentage.for {
+    color: #28a745;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* Admin button styles */
-.admin-button {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.admin-button:hover {
-    background-color: #45a049;
+.percentage.against {
+    color: #dc3545;
 }

@@ -3,107 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ניהול שאלות - מערכת הצבעה</title>
+    <title>Manage Questions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="modal" style="display: block;">
-        <div class="modal-content">
-            <h2>ניהול שאלות</h2>
-            <table id="questionTable" border="1" style="width: 100%; margin-bottom: 20px;">
-                <thead>
-                    <tr><th>שאלה</th><th>פעולות</th></tr>
-                </thead>
-                <tbody id="questionList"></tbody>
-            </table>
-            <input type="text" id="newQuestion" placeholder="הזן שאלה חדשה (למשל: האם אתה תומך ב-X?)">
-            <br><br>
-            <button onclick="addQuestion()">הוסף שאלה</button>
-            <button onclick="saveAndExit()">שמור וצא</button>
+    <nav class="navbar">
+        <a href="#" class="navbar-brand"><i class="fas fa-vote-yea"></i> Digital Voting</a>
+        <div>
+            <a href="index.html" class="nav-link">הצבעה</a>
+            <a href="results.html" class="nav-link">Results</a>
         </div>
+    </nav>
+
+    <div class="container">
+        <h3>Manage Questions <button class="btn btn-primary" onclick="addQuestion()">+ Add Question</button></h3>
+        <div id="questionList"></div>
     </div>
 
     <script>
         let questions = [];
 
-        // Fetch existing questions (placeholder)
-        async function fetchQuestions() {
-            // In a real scenario, this would fetch from /manage-questions endpoint
-            questions = ['האם אתה תומך במועמד A?', 'האם אתה תומך בתוכנית החדשה?', 'האם אתה תומך בשיפור האפליקציה?'];
-            updateQuestionList();
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchQuestions();
+        });
 
-        // Update the question list display
-        function updateQuestionList() {
-            const list = document.getElementById('questionList');
-            list.innerHTML = questions.map((q, index) => `
-                <tr>
-                    <td>${q}</td>
-                    <td><button onclick="removeQuestion(${index})">הסר</button> <button onclick="editQuestion(${index})">ערוך</button></td>
-                </tr>
-            `).join('');
-        }
-
-        // Add a new question
-        async function addQuestion() {
-            const newQuestion = document.getElementById('newQuestion').value.trim();
-            if (newQuestion && newQuestion.includes('האם אתה תומך') && !questions.includes(newQuestion)) {
-                questions.push(newQuestion);
-                document.getElementById('newQuestion').value = '';
-                updateQuestionList();
-                await saveQuestions();
-            } else {
-                alert('אנא הזן שאלה תקינה בפורמט "האם אתה תומך ב-X?" ולא קיימת כבר ברשימה');
-            }
-        }
-
-        // Remove a question
-        async function removeQuestion(index) {
-            if (questions.length > 1) {
-                questions.splice(index, 1);
-                updateQuestionList();
-                await saveQuestions();
-            } else {
-                alert('חייבת להישאר לפחות שאלה אחת');
-            }
-        }
-
-        // Edit a question
-        function editQuestion(index) {
-            const newText = prompt('ערוך שאלה:', questions[index]);
-            if (newText && newText.includes('האם אתה תומך') && !questions.includes(newText)) {
-                questions[index] = newText;
-                updateQuestionList();
-                saveQuestions();
-            } else {
-                alert('אנא הזן שאלה תקינה בפורמט "האם אתה תומך ב-X?" ולא קיימת כבר ברשימה');
-            }
-        }
-
-        // Save questions to server (placeholder)
-        async function saveQuestions() {
-            try {
-                const response = await fetch('https://voting-sms-server.onrender.com/manage-questions', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'add', question: questions[questions.length - 1] }),
+        function fetchQuestions() {
+            fetch('/api/questions')
+                .then(response => response.json())
+                .then(data => {
+                    questions = data;
+                    displayQuestions();
+                })
+                .catch(error => {
+                    console.error('Error fetching questions:', error);
+                    showToast('שגיאה בטעינת השאלות');
                 });
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.error);
-                console.log('Questions saved:', data);
-            } catch (error) {
+        }
+
+        function displayQuestions() {
+            const container = document.getElementById('questionList');
+            container.innerHTML = '';
+            questions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>שאלה ${index + 1}</span>
+                        <div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" ${q.active ? 'checked' : ''} onchange="toggleActive(${index})">
+                                <span class="slider"></span>
+                            </label>
+                            <button class="btn" style="color: #dc3545;" onclick="deleteQuestion(${index})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <input type="text" class="form-control" value="${q.question}" onblur="updateQuestion(${index}, this.value)">
+                    <textarea class="form-control" placeholder="תיאור או הקשר (אופציונלי)" onblur="updateDescription(${index}, this.value)">${q.description || ''}</textarea>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function addQuestion() {
+            const newQuestion = { question: 'שאלה חדשה', description: '', active: true };
+            questions.push(newQuestion);
+            fetch('/api/questions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newQuestion)
+            })
+            .then(() => displayQuestions())
+            .catch(error => {
+                console.error('Error adding question:', error);
+                showToast('שגיאה בהוספת שאלה');
+            });
+        }
+
+        function updateQuestion(index, value) {
+            questions[index].question = value;
+            saveQuestions();
+        }
+
+        function updateDescription(index, value) {
+            questions[index].description = value;
+            saveQuestions();
+        }
+
+        function toggleActive(index) {
+            questions[index].active = !questions[index].active;
+            saveQuestions();
+        }
+
+        function deleteQuestion(index) {
+            questions.splice(index, 1);
+            saveQuestions();
+        }
+
+        function saveQuestions() {
+            fetch('/api/questions/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(questions)
+            })
+            .then(() => displayQuestions())
+            .catch(error => {
                 console.error('Error saving questions:', error);
-                alert('שגיאה בשמירת השאלות');
-            }
+                showToast('שגיאה בשמירת השאלות');
+            });
         }
 
-        // Save and exit to main page
-        function saveAndExit() {
-            window.location.href = 'index.html';
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.style.position = 'fixed';
+            toast.style.bottom = '20px';
+            toast.style.right = '20px';
+            toast.style.backgroundColor = '#dc3545';
+            toast.style.color = 'white';
+            toast.style.padding = '10px 20px';
+            toast.style.borderRadius = '5px';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
         }
-
-        // Initialize
-        fetchQuestions();
     </script>
 </body>
-</html>	
+</html>

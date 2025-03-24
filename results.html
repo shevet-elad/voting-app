@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting Results</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="#" class="navbar-brand"><i class="fas fa-vote-yea"></i> Digital Voting</a>
+        <div>
+            <a href="index.html" class="nav-link">הצבעה</a>
+            <a href="admin.html" class="nav-link"><i class="fas fa-cog"></i> Admin</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h3>Voting Results <a href="/api/results/csv" class="nav-link"><i class="fas fa-download"></i> Download CSV</a></h3>
+        <div id="resultsContainer"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/api/results')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('resultsContainer');
+                    data.forEach(result => {
+                        const totalVotes = result.for + result.against;
+                        const forPercentage = totalVotes ? (result.for / totalVotes) * 100 : 0;
+                        const againstPercentage = totalVotes ? (result.against / totalVotes) * 100 : 0;
+                        const card = document.createElement('div');
+                        card.className = 'card';
+                        card.innerHTML = `
+                            <h5>${result.question}</h5>
+                            <div class="histogram">
+                                <div class="bar" style="height: ${forPercentage}px;"></div>
+                                <div class="bar" style="height: ${againstPercentage}px;"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-around;">
+                                <span>בעד</span>
+                                <span>נגד</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-around; margin-top: 10px;">
+                                <span class="percentage for">${forPercentage.toFixed(1)}% (${result.for} votes)</span>
+                                <span class="percentage against">${againstPercentage.toFixed(1)}% (${result.against} votes)</span>
+                            </div>
+                            <p style="text-align: center; margin-top: 10px;">סה"כ הצבעות: ${totalVotes}</p>
+                        `;
+                        container.appendChild(card);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching results:', error);
+                    showToast('שגיאה בטעינת התוצאות');
+                });
+        });
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.style.position = 'fixed';
+            toast.style.bottom = '20px';
+            toast.style.right = '20px';
+            toast.style.backgroundColor = '#dc3545';
+            toast.style.color = 'white';
+            toast.style.padding = '10px 20px';
+            toast.style.borderRadius = '5px';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
