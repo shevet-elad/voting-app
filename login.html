@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="he">
+<html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>הזדהות</title>
+    <title>אימות סלולרי - מערכת הצבעה</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -16,16 +16,22 @@
                     Digital Voting
                 </a>
             </div>
-            <!-- Removed navbar-links -->
         </div>
     </nav>
 
     <div class="container">
         <div class="card">
-            <h2>הזדהות</h2>
+            <h2>אימות סלולרי</h2>
             <p>אנא הזן את מספר הטלפון שלך כדי להמשיך להצבעה.</p>
-            <input type="tel" id="phoneNumber" placeholder="הזן מספר טלפון">
-            <button class="btn-primary" onclick="submitPhoneNumber()">אישור</button>
+            <div id="phone-section">
+                <input type="tel" id="phone-number" placeholder="הזן מספר טלפון (לדוגמה: 0501234567)" required>
+                <button class="btn-primary" id="send-code-btn" onclick="sendCode()">שלח קוד אימות</button>
+            </div>
+            <div id="code-section" style="display: none;">
+                <input type="text" id="verification-code" placeholder="הזן את הקוד שקיבלת" required>
+                <button class="btn-primary" id="verify-code-btn" onclick="verifyCode()">אמת קוד</button>
+            </div>
+            <div id="message"></div>
         </div>
     </div>
 
