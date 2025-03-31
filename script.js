@@ -1,8 +1,10 @@
 let questions = [];
 let answers = [];
 
-// הגדרת כתובת השרת ל-URL saltedשל Render
-const serverUrl = 'https://voting-sms-server.onrender.com';
+// קביעת כתובת השרת באופן דינמי לפי הסביבה
+const serverUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3000'
+    : 'https://voting-sms-server.onrender.com';
 
 async function loadQuestions() {
     try {
@@ -43,7 +45,7 @@ function renderQuestions() {
     const submitButton = document.createElement('button');
     submitButton.className = 'btn-primary';
     submitButton.textContent = 'שלח הצבעה';
-    submitButton.onclick = submitVote;
+    submitButton.onclick = proceedToVerification;
     container.appendChild(submitButton);
 }
 
@@ -59,47 +61,15 @@ function selectAnswer(index, answer) {
     });
 }
 
-async function submitVote() {
-    const phoneNumber = sessionStorage.getItem('phoneNumber');
-    if (phoneNumber === null) {
-        alert('אנא הזדהה תחילה');
-        window.location.href = 'login.html';
-        return;
-    }
-
+function proceedToVerification() {
     if (answers.some(answer => answer === null)) {
         alert('אנא ענה על כל השאלות לפני שליחת ההצבעה');
         return;
     }
 
-    try {
-        const response = await fetch(`${serverUrl}/api/vote`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ phoneNumber, answers })
-        });
-
-        const result = await response.json();
-        if (result.success) {
-            const container = document.getElementById('votingContainer');
-            container.innerHTML = `
-                <div class="card text-center">
-                    <i class="fas fa-check-circle"></i>
-                    <h3>תודה על ההצבעה!</h3>
-                    <p>ההצבעה שלך נשמרה בהצלחה.</p>
-                </div>
-            `;
-            // Redirect to results after 3 seconds
-            setTimeout(() => {
-                window.location.href = 'results.html';
-            }, 3000);
-        } else {
-            alert('שגיאה בשליחת ההצבעה. אנא נסה שוב.');
-        }
-    } catch (error) {
-        console.error('Error submitting vote:', error);
-        alert('שגיאה בשליחת ההצבעה. אנא נסה שוב.');
-    }
+    // שמירת ההצבעות ב-sessionStorage והפניה לאימות
+    sessionStorage.setItem('pendingAnswers', JSON.stringify(answers));
+    window.location.href = 'login.html';
 }
 
 document.addEventListener('DOMContentLoaded', loadQuestions);

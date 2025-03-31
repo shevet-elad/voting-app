@@ -5,25 +5,23 @@ const sendCodeBtn = document.getElementById('send-code-btn');
 const verifyCodeBtn = document.getElementById('verify-code-btn');
 let phoneNumber = '';
 
-// הגדרת כתובת השרת ל-URL של Render
-const serverUrl = 'https://voting-sms-server.onrender.com';
+// Dynamic server URL based on environment
+const serverUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3000'
+    : 'https://voting-sms-server.onrender.com';
 
 async function sendCode() {
     phoneNumber = document.getElementById('phone-number').value.trim();
 
-    // בדיקה אם הוזנה המחרוזת "test-number"
+    // Check if "test-number" was entered
     if (phoneNumber.toLowerCase() === 'test-number') {
-        // שמירת "test-number" ב-sessionStorage כדי שההצבעה תישמר
         sessionStorage.setItem('phoneNumber', 'test-number');
-        messageDiv.textContent = 'מצב בדיקה: דילוג על אימות, מופנה לדף ההצבעה...';
+        messageDiv.textContent = 'מצב בדיקה: דילוג על אימות, שולח הצבעה...';
         messageDiv.className = 'success';
-        setTimeout(() => {
-            window.location.href = 'index.html'; // הפניה ישירה ל-index.html
-        }, 1000);
+        await submitVote('test-number');
         return;
     }
 
-    // תהליך אימות רגיל אם לא הוזן "test-number"
     if (!phoneNumber) {
         messageDiv.textContent = 'אנא הזן מספר טלפון';
         messageDiv.className = 'error';
@@ -80,13 +78,10 @@ async function verifyCode() {
         const data = await response.json();
 
         if (data.status === 'approved') {
-            // שמירת מספר הטלפון ב-sessionStorage
             sessionStorage.setItem('phoneNumber', phoneNumber);
-            messageDiv.textContent = 'אימות הצליח! מופנה לדף ההצבעה...';
+            messageDiv.textContent = 'אימות הצליח! שולח הצבעה...';
             messageDiv.className = 'success';
-            setTimeout(() => {
-                window.location.href = 'index.html'; // הפניה ל-index.html
-            }, 1000);
+            await submitVote(phoneNumber);
         } else {
             messageDiv.textContent = 'הקוד שגוי. נסה שוב.';
             messageDiv.className = 'error';
@@ -96,5 +91,38 @@ async function verifyCode() {
         messageDiv.className = 'error';
     } finally {
         verifyCodeBtn.disabled = false;
+    }
+}
+
+async function submitVote(phoneNumber) {
+    const answers = JSON.parse(sessionStorage.getItem('pendingAnswers'));
+    if (!answers) {
+        messageDiv.textContent = 'שגיאה: אין הצבעות לשליחה';
+        messageDiv.className = 'error';
+        return;
+    }
+
+    try {
+        const response = await fetch(`${serverUrl}/api/vote`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phoneNumber, answers })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            messageDiv.textContent = 'תודה על ההצבעה! ההצבעה שלך נשמרה בהצלחה.';
+            sessionStorage.removeItem('pendingAnswers'); // Clear after submission
+            setTimeout(() => {
+                window.location.href = 'results.html';
+            }, 3000);
+        } else {
+            messageDiv.textContent = 'שגיאה בשליחת ההצבעה. נסה שוב.';
+            messageDiv.className = 'error';
+        }
+    } catch (error) {
+        console.error('Error submitting vote:', error);
+        messageDiv.textContent = 'שגיאה בשליחת ההצבעה: ' + error.message;
+        messageDiv.className = 'error';
     }
 }
