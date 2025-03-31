@@ -1,6 +1,9 @@
+// הגדרת כתובת השרת ל-URL של Render
+const serverUrl = 'https://voting-sms-server.onrender.com';
+
 async function loadResults() {
     try {
-        const response = await fetch('/api/results');
+        const response = await fetch(`${serverUrl}/api/results`);
         const results = await response.json();
         console.log('Results received from server:', results);
         renderResults(results);
@@ -98,11 +101,10 @@ function renderResults(results) {
                         display: false // Hide the legend since we only have one dataset
                     }
                 },
-                // Revert bar width and spacing to previous state
                 datasets: {
                     bar: {
-                        barPercentage: 0.5, // Revert to original bar width
-                        categoryPercentage: 0.2 // Revert to original spacing
+                        barPercentage: 0.5,
+                        categoryPercentage: 0.2
                     }
                 }
             }
@@ -112,7 +114,7 @@ function renderResults(results) {
 
 async function downloadResults() {
     try {
-        window.location.href = '/api/results/csv';
+        window.location.href = `${serverUrl}/api/results/csv`;
     } catch (error) {
         console.error('Error downloading results:', error);
     }

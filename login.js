@@ -5,6 +5,9 @@ const sendCodeBtn = document.getElementById('send-code-btn');
 const verifyCodeBtn = document.getElementById('verify-code-btn');
 let phoneNumber = '';
 
+// הגדרת כתובת השרת ל-URL של Render
+const serverUrl = 'https://voting-sms-server.onrender.com';
+
 async function sendCode() {
     phoneNumber = document.getElementById('phone-number').value.trim();
 
@@ -32,7 +35,7 @@ async function sendCode() {
     messageDiv.className = '';
 
     try {
-        const response = await fetch('/send-sms', {
+        const response = await fetch(`${serverUrl}/send-sms`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ to: phoneNumber })
@@ -69,7 +72,7 @@ async function verifyCode() {
     messageDiv.className = '';
 
     try {
-        const response = await fetch('/verify-sms', {
+        const response = await fetch(`${serverUrl}/verify-sms`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ to: phoneNumber, code: code })

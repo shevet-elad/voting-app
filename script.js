@@ -1,9 +1,12 @@
 let questions = [];
 let answers = [];
 
+// הגדרת כתובת השרת ל-URL saltedשל Render
+const serverUrl = 'https://voting-sms-server.onrender.com';
+
 async function loadQuestions() {
     try {
-        const response = await fetch('/api/questions');
+        const response = await fetch(`${serverUrl}/api/questions`);
         questions = await response.json();
         console.log('Questions received from server:', questions);
         renderQuestions();
@@ -70,7 +73,7 @@ async function submitVote() {
     }
 
     try {
-        const response = await fetch('/api/vote', {
+        const response = await fetch(`${serverUrl}/api/vote`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ phoneNumber, answers })
